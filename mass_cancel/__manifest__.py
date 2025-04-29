@@ -3,7 +3,7 @@
 # Email: nebulasphere.team@gmail.com
 
 {
-    'name': 'NebulaSphere Mass Cancel Orders (Sales, Purchases, Invoices) | Bulk Cancel Orders | Cancel Button',
+    'name': 'Mass Cancel Orders (Sales, Purchases, Invoices) | Bulk Cancel Orders | Cancel Button',
     'author': 'NebulaSphere',
     'website': 'https://www.nebulasphere.com',
     'support': 'nebulasphere.team@gmail.com',
