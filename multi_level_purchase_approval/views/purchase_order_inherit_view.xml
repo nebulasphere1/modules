@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="purchase_order_inherited_form_dynamic_approval" model="ir.ui.view">
+            <field name="name">purchase.order.inherited.form.dynamic.approval</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//header" position="inside">
+                    <button name="approve_order" type="object" string="Approve"
+                            invisible="state != 'waiting for approval' or is_current_approver != True"
+                            class="btn btn-primary"
+                            data-hotkey="l"/>
+                    <button name="reject_order" type="object" string="Reject"
+                            invisible="state != 'waiting for approval' or is_current_approver != True"
+                            data-hotkey="l"/>
+                    <button name="button_draft" invisible="state != 'reject'" string="Reset to Draft" type="object"
+                            data-hotkey="o"/>
+                </xpath>
+                <xpath expr="//sheet/group/group/field[@name='partner_ref']" position="after">
+                    <field name="approval_level" readonly="1"/>
+                    <field name="is_current_approver" invisible="1"/>
+                </xpath>
+                <xpath expr="//sheet/notebook/page[@name='purchase_delivery_invoice']" position="after">
+                    <page string="Approval Info">
+                        <group>
+                            <group name="next_approval" string="NEXT APPROVAL">
+                                <field name="next_approval_level"/>
+                                <field name="users" widget="many2many_tags"/>
+                                <field name="groups" widget="many2many_tags"/>
+                            </group>
+                            <group name="reject_info" string="REJECT ORDER INFO">
+                                <field name="reject_date"/>
+                                <field name="reject_by"/>
+                                <field name="reject_reason"/>
+                            </group>
+                            <field name="purchase_approval_line_details" widget="many2many" nolabel="1" readonly="1">
+                                <list editable="bottom">
+                                    <field name="level" readonly="1"/>
+                                    <field name="user_id" readonly="1"/>
+                                    <field name="group_id" readonly="1"/>
+                                    <field name="status" readonly="1" widget="boolean_toggle"/>
+                                    <field name="approved_date" readonly="1"/>
+                                    <field name="process_approved_by" readonly="1"/>
+                                    <field name="purchase_order" readonly="1"/>
+                                </list>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <record id="purchase_order_inherited_list_waiting_approval" model="ir.ui.view">
+            <field name="name">purchase.order.inherited.list.waiting.approval</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="inside">
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_waiting_approval" model="ir.actions.act_window">
+            <field name="name">Waiting Approval</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('state', '=', 'waiting for approval'), ('users', '=', uid)]</field>
+        </record>
+        <menuitem id="purchase_approval_waiting_approval"
+                  parent="purchase.menu_procurement_management"
+                  name="Waiting Approval"
+                  sequence="4"
+                  action="action_waiting_approval"/>
+
+        <record id="purchase_order_inherited_list_my_approval" model="ir.ui.view">
+            <field name="name">purchase.order.inherited.list.my.approval</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list/field[@name='company_id']" position="after">
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_my_approval" model="ir.actions.act_window">
+            <field name="name">My Approval</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('purchase_approval_line_details.user_id', '=',  uid)]</field>
+        </record>
+
+        <menuitem id="purchase_approval_my_approval"
+                  parent="purchase.menu_procurement_management"
+                  name="My Approval"
+                  sequence="5"
+                  action="action_my_approval"/>
+    </data>
+</odoo>
