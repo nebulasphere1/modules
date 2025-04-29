@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="action_mass_cancel_sale_order" model="ir.actions.server">
+            <field name="name">Cancel Sale Order</field>
+            <field name="type">ir.actions.server</field>
+            <field name="groups_id" eval="[(4, ref('mass_cancel.group_cancel_order'))]"/>
+            <field name="model_id" ref="sale.model_sale_order" />
+            <field name="binding_model_id" ref="sale.model_sale_order" />
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    for rec in records:
+                        if rec.state == 'draft':
+                            rec.action_cancel()
+                        elif rec.state != 'cancel':
+                            env['sale.order.cancel'].create({'order_id': rec.id}).action_cancel()
+            </field>
+        </record>
+
+        <record id="action_mass_cancel_purchase_order" model="ir.actions.server">
+            <field name="name">Cancel Purchase Order</field>
+            <field name="type">ir.actions.server</field>
+            <field name="groups_id" eval="[(4, ref('mass_cancel.group_cancel_order'))]"/>
+            <field name="model_id" ref="purchase.model_purchase_order" />
+            <field name="binding_model_id" ref="purchase.model_purchase_order" />
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    for rec in records:
+                        rec.button_cancel()
+            </field>
+        </record>
+
+        <record id="action_mass_cancel_invoice" model="ir.actions.server">
+            <field name="name">Cancel Invoice</field>
+            <field name="type">ir.actions.server</field>
+            <field name="groups_id" eval="[(4, ref('mass_cancel.group_cancel_order'))]"/>
+            <field name="model_id" ref="account.model_account_move" />
+            <field name="binding_model_id" ref="account.model_account_move" />
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    for rec in records:
+                        rec.button_cancel()
+            </field>
+        </record>
+    </data>
+</odoo>
