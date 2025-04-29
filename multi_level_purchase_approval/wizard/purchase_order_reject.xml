@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_reject_wizard" model="ir.ui.view">
+        <field name="name">purchase.order.reject.wizard.form.view</field>
+        <field name="model">purchase.order.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="reason" required="1" label="Reason"/>
+                    </group>
+                    <footer>
+                        <button string="Confirm" class="btn-primary" type="object" name="reject_purchase_order"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

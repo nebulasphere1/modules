@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="approval_configuration_tree_view" model="ir.ui.view">
+        <field name="name">approval.configuration.tree.view</field>
+        <field name="model">approval.configuration</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" placeholder="Name"/>
+                <field name="minimum_amount"/>
+                <field name="user_in_cc"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="approval_configuration_form_view" model="ir.ui.view">
+        <field name="name">approval.configuration.form.view</field>
+        <field name="model">approval.configuration</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <field name="minimum_amount"/>
+                        <field name="allowed_companies" widget="many2many_tags"/>
+                        <field name="user_in_cc" widget="boolean_toggle"/>
+                    </group>
+                    <notebook>
+                        <page string="Approval Details">
+                            <field name="approval_details">
+                                <tree>
+                                    <field name="level"/>
+                                    <field name="approve_process_by"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_approval_configuration" model="ir.actions.act_window">
+        <field name="name">Approval Configuration</field>
+        <field name="res_model">approval.configuration</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="purchase_approval_configuration"
+              parent="purchase.menu_purchase_config"
+              name="Approval Configurations"
+              sequence="50"
+              action="action_approval_configuration"/>
+</odoo>

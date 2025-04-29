@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_approval_line_form_view" model="ir.ui.view">
+        <field name="name">purchase.approval.line.form.view</field>
+        <field name="model">purchase.approval.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="approve_process_by"/>
+                        <field name="level"/>
+                    </group>
+                    <field name="user_id" invisible="approve_process_by=='group'" widget="many2many" nolabel="1"/>
+                    <field name="group_id" invisible="approve_process_by!='group'" widget="many2many" nolabel="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="action_purchase_approval_line" model="ir.actions.act_window">
+        <field name="name">purchase approval line</field>
+        <field name="res_model">purchase.approval.line</field>
+        <field name="view_mode">form</field>
+    </record>
+</odoo>
+

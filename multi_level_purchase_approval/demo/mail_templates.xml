@@ -1,0 +1,194 @@
+<odoo>
+    <data>
+        <record id="email_template_purchase_approval" model="mail.template">
+            <field name="name">Purchase Approval</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="subject">Approval Request for : {{ object.name }}</field>
+            <field name="email_from">{{ object.partner_id.email }}</field>
+            <field name="body_html" type="html">
+                <div>
+                    <h2>Submit for Approval:
+                        <t t-out="object.name"></t>
+                    </h2>
+                    <p>
+                        Dear Approver,
+                        <br/>
+                        <br/>
+                        This is to inform you that the order is submitted for approval.
+                        <br/>
+                        <b>User:</b>
+                        <t t-out="object.partner_id.name"></t>
+                        <br/>
+                        <b>Total Amount:</b>
+                        <t t-out="object.amount_total"></t>
+                        <br/>
+                        <b>Approval Level:</b>
+                        <t t-out="object.approval_level.name"></t>
+                        <br/>
+                        <b>Minimum Amount:</b>
+                        <t t-out="object.approval_level.minimum_amount"></t>
+                        <br/>
+                    </p>
+                    <br/>
+
+                    <p>Order Approval information as below.</p>
+
+                    <p>
+                        <b>Approval Level Details:</b>
+                    </p>
+                    <table border="0" cellpadding="5" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Level</th>
+                                <th>Approver</th>
+                                <th>Approved Date</th>
+                                <th>Approved By</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="object.purchase_approval_line_details" t-as="line">
+                                <tr>
+                                    <td>
+                                        <t t-out="line.level"/>
+                                    </td>
+                                    <td>
+                                        <t t-if="line.user_id">
+                                            <t t-foreach="line.user_id" t-as="user">
+                                                <p>
+                                                    <t t-out="user.name"/>
+                                                </p>
+                                            </t>
+                                        </t>
+                                        <t t-if="line.group_id">
+                                            <t t-foreach="line.group_id" t-as="group">
+                                                <p>
+                                                    <t t-out="group.name"/>
+                                                </p>
+                                            </t>
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <t t-out="line.approved_date"/>
+                                    </td>
+
+                                    <td>
+                                        <t t-if="line.process_approved_by.name">
+                                            <t t-out="line.process_approved_by.name"/>
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <t t-out="line.status"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <br/>
+
+                    <p>if you are authorize approver as per approver level.
+                        <br/>
+                        you can use the following link and approve the order
+                    </p>
+                    <br/>
+                    <a t-attf-href="/web?#id={{ object.id }}&amp;view_type=form&amp;model=purchase.order"
+                       style="text-align: center;color: #fbfff5;background-color: #714b67; padding: 10px; border-radius:10px; text-decoration:none">
+                        Order ref : #
+                        <t t-out="object.name"/>
+                    </a>
+                    <br/>
+                    <p>Thanks.</p>
+                </div>
+            </field>
+        </record>
+
+        <record id="email_template_order_confirm" model="mail.template">
+            <field name="name">Purchase Order Confirm</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="subject">Order Confirm : {{ object.name }}</field>
+            <field name="email_from">{{ object.env.user.partner_id.email }}</field>
+            <field name="email_to">{{ object.partner_id.email }}</field>
+            <field name="body_html" type="html">
+                <div>
+                    <h2>Order Confirmed :
+                        <t t-out="object.name"></t>
+                    </h2>
+                    <p>
+                        Dear User!!,
+                        <br/>
+                        <br/>
+                        This is to inform you that your order is Confirmed.
+                        <br/>
+                        You can use the following link to access the purchase order.
+                    </p>
+                    <br/>
+                    <a t-attf-href="/web?#id={{ object.id }}&amp;view_type=form&amp;model=purchase.order"
+                       style="text-align: center;color: #fbfff5;background-color: #714b67; padding: 10px; border-radius:10px; text-decoration:none">
+                        Order ref : #
+                        <t t-out="object.name"/>
+                    </a>
+                    <br/>
+                    <p>Thanks.</p>
+                </div>
+            </field>
+        </record>
+
+        <record id="email_template_order_reject" model="mail.template">
+            <field name="name">Purchase Order Rejected</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="subject">Reject Order</field>
+            <field name="email_from">{{object.env.user.partner_id.email }}</field>
+            <field name="email_to">{{ object.partner_id.email }}</field>
+            <field name="body_html" type="html">
+                <div>
+                    <h2>Order Rejected :
+                        <t t-out="object.name"></t>
+                    </h2>
+                    <br/>
+                    <br/>
+                    <p>
+                        Dear User!!,
+                        <br/>
+                        <br/>
+                        Rejected Order Information.
+                    </p>
+                    <table border="0" cellpadding="5" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Reject By</th>
+                                <th>Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <t t-out="object.reject_date"/>
+                                </td>
+                                <td>
+                                    <t t-out="object.reject_by.name"/>
+                                </td>
+                                <td>
+                                    <t t-out="object.reject_reason"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <br/>
+                    <p>
+                        You can use the following link to access the purchase order.
+                    </p>
+                    <br/>
+                    <a t-attf-href="/web?#id={{ object.id }}&amp;view_type=form&amp;model=purchase.order"
+                       style="text-align: center;color: #fbfff5;background-color: #714b67; padding: 10px; border-radius:10px; text-decoration:none">
+                        Order ref : #
+                        <t t-out="object.name"/>
+                    </a>
+                    <br/>
+                    <p>Thanks.</p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>
